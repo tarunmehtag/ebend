@@ -1,5 +1,7 @@
+import 'package:ebend/constants/color_constants.dart';
 import 'package:ebend/helper/utils.dart';
 import 'package:ebend/main_screens/add_member/add_member.dart';
+import 'package:ebend/main_screens/suppliers/add_supplier.dart';
 import 'package:flutter/material.dart';
 
 class SuppliersScreen extends StatefulWidget {
@@ -39,7 +41,7 @@ class _SuppliersScreenState extends State<SuppliersScreen> {
             },
             child: Text(
               "Manage",
-              style: TextStyle(color: Colors.blue),
+              style: TextStyle(color: ColorConstants.mainColor),
             ),
           ),
         ],
@@ -59,7 +61,7 @@ class _SuppliersScreenState extends State<SuppliersScreen> {
                     return FlatButton(
                       padding: EdgeInsets.zero,
                       onPressed: () {
-                        //Utils.push(context, AddMember());
+                        Utils.push(context, AddSupplier());
                       },
                       child: Padding(
                         padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 5.0, bottom: 5.0),
@@ -72,7 +74,7 @@ class _SuppliersScreenState extends State<SuppliersScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.add_circle_outline, color: Colors.blue,),
+                              Icon(Icons.add_circle_outline, color: ColorConstants.mainColor,),
                               Text(" Add Supplier",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,

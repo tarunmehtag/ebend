@@ -1,3 +1,4 @@
+import 'package:ebend/constants/color_constants.dart';
 import 'package:ebend/helper/utils.dart';
 import 'package:ebend/main_screens/create_order/create_order_2.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,7 @@ class _CreateOrder1State extends State<CreateOrder1> {
             },
             child: Text(
               "Edit",
-              style: TextStyle(color: Colors.blue),
+              style: TextStyle(color: ColorConstants.mainColor),
             ),
           ),
         ],
@@ -137,7 +138,7 @@ class _CreateOrder1State extends State<CreateOrder1> {
               child: Container(
                 width: 200,
                 decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: ColorConstants.mainColor,
                   borderRadius: BorderRadius.circular(32),
                 ),
                 child: TextButton(
@@ -176,7 +177,7 @@ class _CreateOrder1State extends State<CreateOrder1> {
                 width: 80,
                 height: 80,
                 decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: ColorConstants.mainColor,
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),

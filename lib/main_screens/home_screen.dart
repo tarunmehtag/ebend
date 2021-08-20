@@ -1,4 +1,5 @@
 
+import 'package:ebend/constants/color_constants.dart';
 import 'package:ebend/helper/utils.dart';
 import 'package:ebend/main_screens/manage_jobs.dart';
 import 'package:ebend/main_screens/suppliers/suppliers_screen.dart';
@@ -30,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               child: Text(
                 "Manage Suppliers",
-                style: TextStyle(color: Colors.blue),
+                style: TextStyle(color: ColorConstants.mainColor),
               ),
             ),
             Spacer(),
@@ -53,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             child: Text(
               "Manage Jobs",
-              style: TextStyle(color: Colors.blue),
+              style: TextStyle(color: ColorConstants.mainColor),
             ),
           ),
         ],

@@ -1,3 +1,4 @@
+import 'package:ebend/constants/color_constants.dart';
 import 'package:ebend/helper/utils.dart';
 import 'package:ebend/main_screens/add_member/add_member.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,7 @@ class _CreateOrder2State extends State<CreateOrder2> {
             },
             child: Text(
               "Manage",
-              style: TextStyle(color: Colors.blue),
+              style: TextStyle(color: ColorConstants.mainColor),
             ),
           ),
         ],
@@ -78,7 +79,7 @@ class _CreateOrder2State extends State<CreateOrder2> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.add_circle_outline, color: Colors.blue,),
+                              Icon(Icons.add_circle_outline, color: ColorConstants.mainColor,),
                               Text(" Add Member",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -123,7 +124,7 @@ class _CreateOrder2State extends State<CreateOrder2> {
               child: Container(
                 width: 200,
                 decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: ColorConstants.mainColor,
                   borderRadius: BorderRadius.circular(32),
                 ),
                 child: TextButton(

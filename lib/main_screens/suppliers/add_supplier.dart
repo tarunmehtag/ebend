@@ -1,16 +1,15 @@
 import 'package:ebend/constants/color_constants.dart';
 import 'package:ebend/helper/utils.dart';
-import 'package:ebend/main_screens/create_job/create_job_2.dart';
 import 'package:flutter/material.dart';
 
-class CreateJob1 extends StatefulWidget {
-  const CreateJob1({Key? key}) : super(key: key);
+class AddSupplier extends StatefulWidget {
+  const AddSupplier({Key? key}) : super(key: key);
 
   @override
-  _CreateJob1State createState() => _CreateJob1State();
+  _AddSupplierState createState() => _AddSupplierState();
 }
 
-class _CreateJob1State extends State<CreateJob1> {
+class _AddSupplierState extends State<AddSupplier> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +26,7 @@ class _CreateJob1State extends State<CreateJob1> {
           },
         ),
         title: Text(
-          "Create Job 1/2",
+          "Add Supplier",
           style: TextStyle(
             color: Colors.black,
           ),
@@ -50,7 +49,7 @@ class _CreateJob1State extends State<CreateJob1> {
                   enabledBorder: InputBorder.none,
                   errorBorder: InputBorder.none,
                   disabledBorder: InputBorder.none,
-                  hintText: "Job#",
+                  hintText: "Supplier Name",
                   contentPadding: EdgeInsets.all(15),
                 ),
               ),
@@ -71,7 +70,7 @@ class _CreateJob1State extends State<CreateJob1> {
                   enabledBorder: InputBorder.none,
                   errorBorder: InputBorder.none,
                   disabledBorder: InputBorder.none,
-                  hintText: "Address",
+                  hintText: "Email",
                   contentPadding: EdgeInsets.all(15),
                 ),
               ),
@@ -92,7 +91,7 @@ class _CreateJob1State extends State<CreateJob1> {
                   enabledBorder: InputBorder.none,
                   errorBorder: InputBorder.none,
                   disabledBorder: InputBorder.none,
-                  hintText: "Site Contact Name",
+                  hintText: "Phone Number",
                   contentPadding: EdgeInsets.all(15),
                 ),
               ),
@@ -113,30 +112,7 @@ class _CreateJob1State extends State<CreateJob1> {
                   enabledBorder: InputBorder.none,
                   errorBorder: InputBorder.none,
                   disabledBorder: InputBorder.none,
-                  hintText: "Site Contact Number",
-                  contentPadding: EdgeInsets.all(15),
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(32),
-              ),
-              child: TextFormField(
-                //minLines: 1,
-                maxLines: 6,
-                textAlign: TextAlign.center,
-                decoration: new InputDecoration(
-                  border: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  errorBorder: InputBorder.none,
-                  disabledBorder: InputBorder.none,
-                  hintText: "Site Note",
+                  hintText: "Contact Number",
                   contentPadding: EdgeInsets.all(15),
                 ),
               ),
@@ -153,7 +129,7 @@ class _CreateJob1State extends State<CreateJob1> {
                 ),
                 child: TextButton(
                   onPressed: () {
-                    Utils.push(context, CreateJob2());
+                    Utils.popBack(context);
                   },
                   child: Text(
                     "NEXT",

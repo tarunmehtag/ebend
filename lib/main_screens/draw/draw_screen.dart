@@ -1,3 +1,4 @@
+import 'package:ebend/constants/color_constants.dart';
 import 'package:ebend/helper/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -37,7 +38,7 @@ class _DrawScreenState extends State<DrawScreen> {
             },
             child: Text(
               "Save Template",
-              style: TextStyle(color: Colors.blue),
+              style: TextStyle(color: ColorConstants.mainColor),
             ),
           ),
         ],
@@ -64,10 +65,10 @@ class _DrawScreenState extends State<DrawScreen> {
 
               ),
               decoration: BoxDecoration(
-                // color: Colors.blue,
+                // color: ColorConstants.mainColor,
                 borderRadius: BorderRadius.all(Radius.circular(20)),
                 border: Border.all(
-                  color: Colors.blue,
+                  color: ColorConstants.mainColor,
                   width: 1.0,
                 )
               ),
@@ -81,7 +82,7 @@ class _DrawScreenState extends State<DrawScreen> {
                 child: Container(
                   width: 200,
                   decoration: BoxDecoration(
-                    color: Colors.blue,
+                    color: ColorConstants.mainColor,
                     borderRadius: BorderRadius.circular(32),
                   ),
                   child: TextButton(

@@ -1,3 +1,4 @@
+import 'package:ebend/constants/color_constants.dart';
 import 'package:ebend/helper/utils.dart';
 import 'package:ebend/main_screens/draw/draw_screen.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,7 @@ class _AddMemberState extends State<AddMember> {
             },
             child: Text(
               "Template",
-              style: TextStyle(color: Colors.blue),
+              style: TextStyle(color: ColorConstants.mainColor),
             ),
           ),
         ],
@@ -138,7 +139,7 @@ class _AddMemberState extends State<AddMember> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(32),
-                  border: Border.all(color: Colors.blue, width: 1.0)
+                  border: Border.all(color: ColorConstants.mainColor, width: 1.0)
                 ),
                 child: TextButton(
                   onPressed: () {
@@ -147,7 +148,7 @@ class _AddMemberState extends State<AddMember> {
                   child: Text(
                     "DRAW",
                     style: TextStyle(
-                      color: Colors.blue,
+                      color: ColorConstants.mainColor,
                       fontSize: 20.0,
                       fontWeight: FontWeight.bold
                     ),
@@ -162,7 +163,7 @@ class _AddMemberState extends State<AddMember> {
               child: Container(
                 width: 200,
                 decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: ColorConstants.mainColor,
                   borderRadius: BorderRadius.circular(32),
                 ),
                 child: TextButton(

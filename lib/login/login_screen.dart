@@ -1,3 +1,4 @@
+import 'package:ebend/constants/color_constants.dart';
 import 'package:ebend/helper/utils.dart';
 import 'package:ebend/login/sign_up_screen.dart';
 import 'package:ebend/main_screens/home_screen.dart';
@@ -31,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
             },
             child: Text(
               "Guest Login",
-              style: TextStyle(color: Colors.blue),
+              style: TextStyle(color: ColorConstants.mainColor),
             ),
           ),
         ],
@@ -103,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Container(
                 width: 200,
                 decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: ColorConstants.mainColor,
                   borderRadius: BorderRadius.circular(32),
                 ),
                 child: TextButton(

@@ -1,3 +1,4 @@
+import 'package:ebend/constants/color_constants.dart';
 import 'package:ebend/helper/utils.dart';
 import 'package:ebend/main_screens/home_screen.dart';
 import 'package:flutter/material.dart';
@@ -156,7 +157,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Container(
                 width: 200,
                 decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: ColorConstants.mainColor,
                   borderRadius: BorderRadius.circular(32),
                 ),
                 child: TextButton(
