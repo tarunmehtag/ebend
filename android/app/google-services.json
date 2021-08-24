@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "48613518631",
+    "project_id": "ebendapp",
+    "storage_bucket": "ebendapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:48613518631:android:f6d2ce46f0815e17544d02",
+        "android_client_info": {
+          "package_name": "com.example.ebend"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "48613518631-0oo4qtn9dq8p0bhs0shsniekedd4vnqf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKyN5DiYhJ3RtbEsip0exqd7L9wNJ55oA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "48613518631-0oo4qtn9dq8p0bhs0shsniekedd4vnqf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

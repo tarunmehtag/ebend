@@ -11,4 +11,8 @@ class Utils {
   static popBack(BuildContext context) {
     Navigator.pop(context);
   }
+
+  static void hideKeyboard(context) {
+    FocusScope.of(context).requestFocus(new FocusNode());
+  }
 }
