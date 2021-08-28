@@ -1,7 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ebend/common/alert_action_sheet.dart';
 import 'package:ebend/constants/color_constants.dart';
 import 'package:ebend/helper/utils.dart';
 import 'package:ebend/main_screens/create_job/create_job_2.dart';
+import 'package:ebend/stores/local_store.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CreateJob1 extends StatefulWidget {
   const CreateJob1({Key? key}) : super(key: key);
@@ -11,6 +15,35 @@ class CreateJob1 extends StatefulWidget {
 }
 
 class _CreateJob1State extends State<CreateJob1> {
+
+  TextEditingController txtEditJobName = TextEditingController();
+  TextEditingController txtEditAddress = TextEditingController();
+  TextEditingController txtEditSiteContactName = TextEditingController();
+  TextEditingController txtEditSiteContactNumber = TextEditingController();
+  TextEditingController txtEditSiteNote = TextEditingController();
+
+  bool validations() {
+    bool valid = false;
+    var strMsg = "";
+    if(txtEditJobName.text.isEmpty) {
+      strMsg = "Please enter job";
+    } else if(txtEditAddress.text.isEmpty) {
+      strMsg = "Please enter address";
+    } else if(txtEditSiteContactName.text.isEmpty) {
+      strMsg = "Please enter site contact name";
+    } else if(txtEditSiteContactNumber.text.isEmpty) {
+      strMsg = "Please select site contact number";
+    } else if(txtEditSiteNote.text.isEmpty) {
+      strMsg = "Please enter site note";
+    } else {
+      valid = true;
+    }
+    if (!valid) {
+      AlertActionSheet.showAlert(context, "Alert!", strMsg, ["Ok"], (index) {});
+    }
+    return valid;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,6 +76,7 @@ class _CreateJob1State extends State<CreateJob1> {
                 borderRadius: BorderRadius.circular(32),
               ),
               child: TextFormField(
+                controller: txtEditJobName,
                 textAlign: TextAlign.center,
                 decoration: new InputDecoration(
                   border: InputBorder.none,
@@ -64,6 +98,7 @@ class _CreateJob1State extends State<CreateJob1> {
                 borderRadius: BorderRadius.circular(32),
               ),
               child: TextFormField(
+                controller: txtEditAddress,
                 textAlign: TextAlign.center,
                 decoration: new InputDecoration(
                   border: InputBorder.none,
@@ -85,6 +120,7 @@ class _CreateJob1State extends State<CreateJob1> {
                 borderRadius: BorderRadius.circular(32),
               ),
               child: TextFormField(
+                controller: txtEditSiteContactName,
                 textAlign: TextAlign.center,
                 decoration: new InputDecoration(
                   border: InputBorder.none,
@@ -106,6 +142,12 @@ class _CreateJob1State extends State<CreateJob1> {
                 borderRadius: BorderRadius.circular(32),
               ),
               child: TextFormField(
+                controller: txtEditSiteContactNumber,
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(10),
+                ],
                 textAlign: TextAlign.center,
                 decoration: new InputDecoration(
                   border: InputBorder.none,
@@ -127,6 +169,7 @@ class _CreateJob1State extends State<CreateJob1> {
                 borderRadius: BorderRadius.circular(32),
               ),
               child: TextFormField(
+                controller: txtEditSiteNote,
                 //minLines: 1,
                 maxLines: 6,
                 textAlign: TextAlign.center,
@@ -153,7 +196,9 @@ class _CreateJob1State extends State<CreateJob1> {
                 ),
                 child: TextButton(
                   onPressed: () {
-                    Utils.push(context, CreateJob2());
+                    if (validations()) {
+                      addJob();
+                    }
                   },
                   child: Text(
                     "NEXT",
@@ -166,5 +211,26 @@ class _CreateJob1State extends State<CreateJob1> {
         ],
       ),
     );
+  }
+
+  addJob() async {
+    var dict = {
+      "jobName": txtEditJobName.text,
+      "address": txtEditAddress.text,
+      "siteContactName": txtEditSiteContactName.text,
+      "siteContactNumber": txtEditSiteContactNumber.text,
+      "siteNote": txtEditSiteNote.text
+    };
+      CollectionReference users =
+      FirebaseFirestore.instance.collection("users");
+      var info = await LocalStore.getUserInfo();
+      return users.doc(info.id).collection("job").add(dict).then((value) {
+        print(value);
+        Utils.push(context, CreateJob2());
+      }).catchError((error) {
+        AlertActionSheet.showAlert(
+            context, "Alert!", error.toString(), ["Ok"], (index) {});
+      });
+
   }
 }

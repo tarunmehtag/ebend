@@ -4,6 +4,7 @@ import 'package:ebend/extension/string_extension.dart';
 import 'package:ebend/helper/utils.dart';
 import 'package:ebend/login/sign_up_screen.dart';
 import 'package:ebend/main_screens/home_screen.dart';
+import 'package:ebend/services/auth_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -142,7 +143,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: TextButton(
                   onPressed: () async {
                     if (validations()) {
-                      login();
+                      AuthServices.login(txtEditEmail.text, txtEditPassword.text, context, (success, uid) {
+                        if (success) {
+                          Utils.push(context, HomeScreen());
+                        }
+                      });
                     }
                   },
                   child: Text(
@@ -174,37 +179,5 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       ),
     );
-  }
-
-  login() async {
-    bool success = false;
-    var strMsg = "";
-    try {
-      UserCredential userCre = await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: txtEditEmail.text, password: txtEditPassword
-          .text);
-      success = true;
-      print(userCre.user);
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        strMsg = "No user found for that email.";
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        strMsg = "Wrong password provided for that user.";
-        print('Wrong password provided for that user.');
-      }
-    } catch (e) {
-      print(e);
-      strMsg = e.toString();
-    }
-    print(success);
-    if(!success) {
-      AlertActionSheet.showAlert(
-          context, "Alert!", strMsg, ["Ok"],
-              (index) {
-          });
-    } else {
-      Utils.push(context, HomeScreen());
-    }
   }
 }

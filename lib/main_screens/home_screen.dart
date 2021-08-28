@@ -1,8 +1,12 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ebend/common/alert_action_sheet.dart';
 import 'package:ebend/constants/color_constants.dart';
 import 'package:ebend/helper/utils.dart';
 import 'package:ebend/main_screens/manage_jobs.dart';
 import 'package:ebend/main_screens/suppliers/suppliers_screen.dart';
+import 'package:ebend/models/user_model.dart';
+import 'package:ebend/stores/local_store.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,6 +17,24 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  Stream<QuerySnapshot> userStream = FirebaseFirestore.instance.collection('users').snapshots();
+  UserModel userInfo = UserModel();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserInfo();
+  }
+
+  getUserInfo() async {
+    userInfo = await LocalStore.getUserInfo();
+    setState(() {
+      print(userInfo);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
               child: Text(
-                  "Welcome Surixon,",
+                  "Welcome " + userInfo.name + ',',
                 style: TextStyle(
                   fontStyle: FontStyle.italic,
                   fontWeight: FontWeight.w500,
@@ -77,31 +99,46 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Expanded(
-              child: ListView.builder(
-                itemCount: 100,
-                  itemBuilder: (BuildContext context, int index){
-                return Padding(
-                  padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 5.0, bottom: 5.0),
-                  child: Container(
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(32),
-                    ),
-                    child: Center(child: Text("Job ${index+1}",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey.shade600,
-                        fontSize: 18.0,
-                      ),
-                    )),
-                  ),
-                );
-              }),
+              child: StreamBuilder<QuerySnapshot>(
+                stream: userStream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Something went wrong');
+                  }
+
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Text("Loading");
+                  }
+                  return ListView.builder(
+                        itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (BuildContext context, int index){
+                          Map<String, dynamic> data = snapshot.data!.docs[index].data() as Map<String, dynamic>;
+                          var model = UserModel.fromJson(data);
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 5.0, bottom: 5.0),
+                          child: Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(32),
+                            ),
+                            child: Center(child: Text("Job ${index+1}",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey.shade600,
+                                fontSize: 18.0,
+                              ),
+                            )),
+                          ),
+                        );
+                      });
+                }
+              ),
             )
           ],
         ),
       ),
     );
   }
+
 }

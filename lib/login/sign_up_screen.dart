@@ -5,6 +5,8 @@ import 'package:ebend/constants/color_constants.dart';
 import 'package:ebend/extension/string_extension.dart';
 import 'package:ebend/helper/utils.dart';
 import 'package:ebend/main_screens/home_screen.dart';
+import 'package:ebend/services/auth_services.dart';
+import 'package:ebend/services/firebase_data_manager.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -281,50 +283,71 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  // Example code for registration.
   Future<void> register() async {
-    bool success = false;
-    var strMsg = "";
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: txtEditEmail.text,
-        password: txtEditPassword.text,
-      );
-      success = true;
-      addUser(userCredential.user);
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        strMsg = "The password provided is too weak.";
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        strMsg = "The account already exists for that email.";
-        print('The account already exists for that email.');
+    AuthServices.register(txtEditEmail.text, txtEditPassword.text, context, (success, uid) {
+      if(success) {
+        var dict = {
+          'name': txtEditName.text,
+          'email': txtEditEmail.text,
+          'dob': txtEditDOB.text,
+          'uid': uid
+          // Stokes and Sons
+        };
+        FirebaseDataManager.addUser("users", dict, context, (success) {
+          if(success) {
+            Utils.push(context, HomeScreen());
+          }
+        });
       }
-    } catch (e) {
-      print(e);
-      strMsg = e.toString();
-    }
-    if(!success) {
-      AlertActionSheet.showAlert(
-          context, "Alert!", strMsg, ["Ok"],
-              (index) {
-          });
-    } else {
-      Utils.push(context, HomeScreen());
-    }
+    });
   }
 
-  Future<void> addUser(User? user) {
+  // Example code for registration.
+  // Future<void> register() async {
+  //   bool success = false;
+  //   var strMsg = "";
+  //   try {
+  //     UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+  //       email: txtEditEmail.text,
+  //       password: txtEditPassword.text,
+  //     );
+  //     success = true;
+  //     addUser(userCredential.user);
+  //   } on FirebaseAuthException catch (e) {
+  //     if (e.code == 'weak-password') {
+  //       strMsg = "The password provided is too weak.";
+  //       print('The password provided is too weak.');
+  //     } else if (e.code == 'email-already-in-use') {
+  //       strMsg = "The account already exists for that email.";
+  //       print('The account already exists for that email.');
+  //     }
+  //   } catch (e) {
+  //     print(e);
+  //     strMsg = e.toString();
+  //   }
+  //   if(!success) {
+  //     AlertActionSheet.showAlert(
+  //         context, "Alert!", strMsg, ["Ok"],
+  //             (index) {
+  //         });
+  //   } else {
+  //     Utils.push(context, HomeScreen());
+  //   }
+  // }
+
+  Future<void> addUser(String uid) {
     // Call the user's CollectionReference to add a new user
     return users
         .add({
       'name': txtEditName.text,
       'email': txtEditEmail.text, // John Doe
       'dob': txtEditDOB.text,
-      'uid': user!.uid
+      'uid': uid
       // Stokes and Sons
     })
-        .then((value) => print("User Added"))
-        .catchError((error) => print("Failed to add user: $error"));
+        .then((value) {
+      Utils.push(context, HomeScreen());
+    })
+        .catchError((error) { print("Failed to add user: $error"); });
   }
 }
