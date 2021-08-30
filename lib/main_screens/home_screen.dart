@@ -5,12 +5,15 @@ import 'package:ebend/constants/color_constants.dart';
 import 'package:ebend/helper/utils.dart';
 import 'package:ebend/main_screens/manage_jobs.dart';
 import 'package:ebend/main_screens/suppliers/suppliers_screen.dart';
+import 'package:ebend/models/job_model.dart';
 import 'package:ebend/models/user_model.dart';
 import 'package:ebend/stores/local_store.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({Key? key, this.uid = ''}) : super(key: key);
+
+  final String uid;
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -18,7 +21,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  Stream<QuerySnapshot> userStream = FirebaseFirestore.instance.collection('users').snapshots();
+  var jobStream;// = FirebaseFirestore.instance.collection('users').doc(info.id).collection("job").snapshots();
   UserModel userInfo = UserModel();
 
   @override
@@ -29,7 +32,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   getUserInfo() async {
-    userInfo = await LocalStore.getUserInfo();
+    //userInfo = await LocalStore.getUserInfo();
+    jobStream = FirebaseFirestore.instance.collection('users').doc(widget.uid).collection("job").snapshots();
     setState(() {
       print(userInfo);
     });
@@ -72,7 +76,12 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           TextButton(
             onPressed: () {
-              Utils.push(context, ManageJobs());
+              Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+                return ManageJobs(uid: widget.uid,);
+              },
+                settings: RouteSettings(name: 'HomeScreen',),
+              ));
+              //Utils.push(context, ManageJobs(uid: widget.uid,));
             },
             child: Text(
               "Manage Jobs",
@@ -100,20 +109,22 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
-                stream: userStream,
+                stream: jobStream,
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return Text('Something went wrong');
                   }
 
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Text("Loading");
+                    return Text("Loading...");
                   }
+                  print(snapshot.data!.docs.length);
+                  print("************");
                   return ListView.builder(
                         itemCount: snapshot.data!.docs.length,
                           itemBuilder: (BuildContext context, int index){
                           Map<String, dynamic> data = snapshot.data!.docs[index].data() as Map<String, dynamic>;
-                          var model = UserModel.fromJson(data);
+                          var model = JobModel.fromJson(data);
                         return Padding(
                           padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 5.0, bottom: 5.0),
                           child: Container(
@@ -122,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(32),
                             ),
-                            child: Center(child: Text("Job ${index+1}",
+                            child: Center(child: Text(/*"Job ${index+1}"*/model.jobName,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.grey.shade600,

@@ -1,6 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ebend/common/alert_action_sheet.dart';
 import 'package:ebend/constants/color_constants.dart';
+import 'package:ebend/extension/string_extension.dart';
 import 'package:ebend/helper/utils.dart';
+import 'package:ebend/stores/local_store.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AddSupplier extends StatefulWidget {
   const AddSupplier({Key? key}) : super(key: key);
@@ -10,6 +15,34 @@ class AddSupplier extends StatefulWidget {
 }
 
 class _AddSupplierState extends State<AddSupplier> {
+
+  TextEditingController txtEditSupplierName = TextEditingController();
+  TextEditingController txtEditEmail = TextEditingController();
+  TextEditingController txtEditPhoneNumber = TextEditingController();
+  TextEditingController txtEditContactNumber = TextEditingController();
+
+  bool validations() {
+    bool valid = false;
+    var strMsg = "";
+    if(txtEditSupplierName.text.isEmpty) {
+      strMsg = "Please enter Supplier Name";
+    } else if(txtEditEmail.text.isEmpty) {
+      strMsg = "Please enter email";
+    } else if(!txtEditEmail.text.isValidEmail()) {
+      strMsg = "Please enter valid email";
+    } else if(txtEditPhoneNumber.text.isEmpty) {
+      strMsg = "Please enter number";
+    } else if(txtEditContactNumber.text.isEmpty) {
+      strMsg = "Please select contact number";
+    } else {
+      valid = true;
+    }
+    if (!valid) {
+      AlertActionSheet.showAlert(context, "Alert!", strMsg, ["Ok"], (index) {});
+    }
+    return valid;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,6 +75,7 @@ class _AddSupplierState extends State<AddSupplier> {
                 borderRadius: BorderRadius.circular(32),
               ),
               child: TextFormField(
+                controller: txtEditSupplierName,
                 textAlign: TextAlign.center,
                 decoration: new InputDecoration(
                   border: InputBorder.none,
@@ -63,6 +97,8 @@ class _AddSupplierState extends State<AddSupplier> {
                 borderRadius: BorderRadius.circular(32),
               ),
               child: TextFormField(
+                controller: txtEditEmail,
+                keyboardType: TextInputType.emailAddress,
                 textAlign: TextAlign.center,
                 decoration: new InputDecoration(
                   border: InputBorder.none,
@@ -84,6 +120,12 @@ class _AddSupplierState extends State<AddSupplier> {
                 borderRadius: BorderRadius.circular(32),
               ),
               child: TextFormField(
+                controller: txtEditPhoneNumber,
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(10),
+                ],
                 textAlign: TextAlign.center,
                 decoration: new InputDecoration(
                   border: InputBorder.none,
@@ -105,6 +147,12 @@ class _AddSupplierState extends State<AddSupplier> {
                 borderRadius: BorderRadius.circular(32),
               ),
               child: TextFormField(
+                controller: txtEditContactNumber,
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(10),
+                ],
                 textAlign: TextAlign.center,
                 decoration: new InputDecoration(
                   border: InputBorder.none,
@@ -129,7 +177,9 @@ class _AddSupplierState extends State<AddSupplier> {
                 ),
                 child: TextButton(
                   onPressed: () {
-                    Utils.popBack(context);
+                    if(validations()) {
+                      addSupplier();
+                    }
                   },
                   child: Text(
                     "NEXT",
@@ -142,5 +192,26 @@ class _AddSupplierState extends State<AddSupplier> {
         ],
       ),
     );
+  }
+
+  addSupplier() async {
+    var dict = {
+      "supplierName": txtEditSupplierName.text,
+      "email": txtEditEmail.text,
+      "phoneNumber": txtEditPhoneNumber.text,
+      "contactNumber": txtEditContactNumber.text
+    };
+    CollectionReference users =
+    FirebaseFirestore.instance.collection("users");
+    var info = await LocalStore.getUserInfo();
+    return users.doc(info.uid).collection("supplier").add(dict).then((value) {
+      print(value);
+      users.doc(info.uid).collection("supplier").doc(value.id).update({"id": value.id}).then((value)  {
+        Utils.popBack(context);
+      });
+    }).catchError((error) {
+      AlertActionSheet.showAlert(
+          context, "Alert!", error.toString(), ["Ok"], (index) {});
+    });
   }
 }

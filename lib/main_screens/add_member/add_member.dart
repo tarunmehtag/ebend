@@ -1,10 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ebend/common/alert_action_sheet.dart';
 import 'package:ebend/constants/color_constants.dart';
 import 'package:ebend/helper/utils.dart';
 import 'package:ebend/main_screens/draw/draw_screen.dart';
+import 'package:ebend/stores/local_store.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AddMember extends StatefulWidget {
-  const AddMember({Key? key}) : super(key: key);
+
+  final String jobId;
+  final String orderId;
+
+  const AddMember({Key? key, this.jobId='', this.orderId=''}) : super(key: key);
 
   @override
   _AddMemberState createState() => _AddMemberState();
@@ -55,6 +63,7 @@ class _AddMemberState extends State<AddMember> {
               ),
               child: TextFormField(
                 textAlign: TextAlign.center,
+                controller: txtEditMemberName,
                 decoration: new InputDecoration(
                   border: InputBorder.none,
                   focusedBorder: InputBorder.none,
@@ -75,6 +84,7 @@ class _AddMemberState extends State<AddMember> {
                 borderRadius: BorderRadius.circular(32),
               ),
               child: TextFormField(
+                controller: txtEditReoSize,
                 textAlign: TextAlign.center,
                 decoration: new InputDecoration(
                   border: InputBorder.none,
@@ -96,6 +106,7 @@ class _AddMemberState extends State<AddMember> {
                 borderRadius: BorderRadius.circular(32),
               ),
               child: TextFormField(
+                controller: txtEditTreatment,
                 textAlign: TextAlign.center,
                 decoration: new InputDecoration(
                   border: InputBorder.none,
@@ -117,6 +128,12 @@ class _AddMemberState extends State<AddMember> {
                 borderRadius: BorderRadius.circular(32),
               ),
               child: TextFormField(
+                controller: txtEditQuantity,
+                keyboardType: TextInputType.number,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(3),
+                ],
                 textAlign: TextAlign.center,
                 decoration: new InputDecoration(
                   border: InputBorder.none,
@@ -168,6 +185,7 @@ class _AddMemberState extends State<AddMember> {
                 ),
                 child: TextButton(
                   onPressed: () {
+                    addMember();
                     //Utils.push(context, CreateOrder2());
                   },
                   child: Text(
@@ -181,5 +199,33 @@ class _AddMemberState extends State<AddMember> {
         ],
       ),
     );
+  }
+
+  TextEditingController txtEditMemberName = TextEditingController();
+  TextEditingController txtEditReoSize = TextEditingController();
+  TextEditingController txtEditTreatment = TextEditingController();
+  TextEditingController txtEditQuantity = TextEditingController();
+
+  addMember() async {
+    var dict = {
+      "memberName": txtEditMemberName.text,
+      "reoSize": txtEditReoSize.text,
+      "treatment": txtEditTreatment.text,
+      "quantity": txtEditQuantity.text,
+      "jobId": widget.jobId,
+      "orderId": widget.orderId
+    };
+    CollectionReference users =
+    FirebaseFirestore.instance.collection("users");
+    var info = await LocalStore.getUserInfo();
+    return users.doc(info.uid).collection("job").doc(widget.jobId).collection('order').doc(widget.orderId).collection('member').add(dict).then((value) {
+      print(value);
+      users.doc(info.uid).collection("job").doc(widget.jobId).collection('order').doc(widget.orderId).collection('member').doc(value.id).update({"id": value.id}).then((val)  {
+        Utils.popBack(context);
+      });
+    }).catchError((error) {
+      AlertActionSheet.showAlert(
+          context, "Alert!", error.toString(), ["Ok"], (index) {});
+    });
   }
 }

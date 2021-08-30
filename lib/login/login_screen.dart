@@ -17,8 +17,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
 
-  TextEditingController txtEditEmail = TextEditingController();
-  TextEditingController txtEditPassword = TextEditingController();
+  TextEditingController txtEditEmail = TextEditingController(/*text: "tarun@yopmail.com"*/);
+  TextEditingController txtEditPassword = TextEditingController(/*text: "123456"*/);
 
   bool validations() {
     bool valid = false;
@@ -132,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(30.0),
+            padding: const EdgeInsets.only(left: 30.0, right: 30.0, top: 30.0),
             child: Center(
               child: Container(
                 width: 200,
@@ -145,7 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     if (validations()) {
                       AuthServices.login(txtEditEmail.text, txtEditPassword.text, context, (success, uid) {
                         if (success) {
-                          Utils.push(context, HomeScreen());
+                          Utils.push(context, HomeScreen(uid: uid,));
                         }
                       });
                     }

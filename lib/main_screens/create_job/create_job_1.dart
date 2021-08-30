@@ -224,13 +224,14 @@ class _CreateJob1State extends State<CreateJob1> {
       CollectionReference users =
       FirebaseFirestore.instance.collection("users");
       var info = await LocalStore.getUserInfo();
-      return users.doc(info.id).collection("job").add(dict).then((value) {
-        print(value);
-        Utils.push(context, CreateJob2());
+      return users.doc(info.uid).collection("job").add(dict).then((value) {
+        print(value.id);
+        users.doc(info.uid).collection("job").doc(value.id).update({"id": value.id}).then((val)  {
+          Utils.push(context, CreateJob2(jobId: value.id,));
+        });
       }).catchError((error) {
         AlertActionSheet.showAlert(
             context, "Alert!", error.toString(), ["Ok"], (index) {});
       });
-
   }
 }

@@ -293,9 +293,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
           'uid': uid
           // Stokes and Sons
         };
-        FirebaseDataManager.addUser("users", dict, context, (success) {
+        FirebaseDataManager.addUser("users", dict, context, (success, uid) {
           if(success) {
-            Utils.push(context, HomeScreen());
+            Utils.push(context, HomeScreen(uid: uid,));
           }
         });
       }
@@ -346,7 +346,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       // Stokes and Sons
     })
         .then((value) {
-      Utils.push(context, HomeScreen());
+      Utils.push(context, HomeScreen(uid: uid,));
     })
         .catchError((error) { print("Failed to add user: $error"); });
   }
